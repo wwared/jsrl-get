@@ -27,25 +27,12 @@ if ($opts->{s}) {
 
     for my $line (split /^/, $list->content) {
       if ($line =~ /"([^"]*)"/) {
-        my $title = $1;
-        my $filename = $title.".mp3";
+        my $filename = $1.".mp3";
         my $url = $jsrl_url.$station.$filename;
         my $stn = $station eq "" ? "jsrl/" : $station;
         my $path = $songs_dir.$stn;
 
-        print "Downloading $url to $path...\n";
-        my $song = $lwp->get($url);
-        die "Error getting '$title' ($url)" if $song->is_error;
-
-        make_path($path);
-        my $fh = IO::File->new($path.$filename, "w");
-        if (defined $fh) {
-          binmode $fh;
-          print $fh $song->content;
-          undef $fh;
-        } else {
-          print "Error creating $path$filename!\n";
-        }
+        download($url, $path, $filename);
       }
     }
   }
@@ -180,18 +167,27 @@ if ($opts->{v}) {
     my $filename = $videofn.".mp4";
     my $url = $jsrl_tv_url.$filename;
 
-    print "Downloading $url to $videos_dir$filename...\n";
-    my $video = $lwp->get($url);
-    die "Error getting '$videofn' ($url)" if $video->is_error;
+    download($url, $videos_dir, $filename);
+  }
+}
 
-    make_path($videos_dir);
-    my $fh = IO::File->new($videos_dir.$filename, "w");
-    if (defined $fh) {
-      binmode $fh;
-      print $fh $video->content;
-      undef $fh;
-    } else {
-      print "Error creating $videos_dir$filename!\n";
-    }
+sub download {
+  my ($url, $dir, $filename) = @_;
+  if (-e $dir.$filename) {
+    print "Skipping $filename (already downloaded)...\n";
+    return;
+  }
+
+  my $req = $lwp->get($url);
+  die "Error getting '$url'" if $req->is_error;
+
+  make_path($dir);
+  my $fh = IO::File->new($dir.$filename, "w");
+  if (defined $fh) {
+    binmode $fh;
+    print $fh $req->content;
+    undef $fh;
+  } else {
+    print "Error creating $dir$filename!\n";
   }
 }

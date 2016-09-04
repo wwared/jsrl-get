@@ -9,7 +9,6 @@ use LWP;
 use File::Path qw(make_path);
 use IO::File;
 use XML::Parser;
-use Encode qw(encode);
 
 # Initialization and option parsing
 my $opts = {};

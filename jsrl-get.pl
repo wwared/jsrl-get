@@ -44,8 +44,8 @@ if ($opts->{s}) {
 
 # Videos configuration
 my $videos_dir = "videos/";
-my $jsrl_tv_url = "https://jetsetradio.live/tv/videoplayer/videos/";
-my $jsrl_tv_list_url = "https://jetsetradio.live/tv/preloader/retrieveTotalFilesAndFilesList.php";
+my $jsrl_tv_url = "https://jetsetradio.live/tv/APP/videoplayer/videos/";
+my $jsrl_tv_list_url = "https://jetsetradio.live/tv/APP/preloader/retrieveTotalFilesAndFilesList.php";
 
 if ($opts->{v}) {
   my $list = $lwp->get($jsrl_tv_list_url);

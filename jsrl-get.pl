@@ -83,7 +83,8 @@ sub download {
   }
 
   my $req = $lwp->get($url);
-  die "Error getting '$url'" if $req->is_error;
+  die "Error getting '$url'" if $req->is_error and $req->code != 404;
+  return if $req->code == 404;
 
   make_path($dir);
   my $fh = IO::File->new($dir.$filename, "w");

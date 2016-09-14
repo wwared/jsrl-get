@@ -14,8 +14,11 @@ use XML::Parser;
 my $opts = {};
 getopts('sv', $opts);
 if (!$opts->{s} && !$opts->{v}) {
-  print "Downloading both songs and videos. You can choose by passing -s or -v as flags.\n";
+  print "Downloading both songs and videos. You can choose by passing -s or -v respectively as flags.\n";
   $opts->{s} = $opts->{v} = 1;
+}
+if (!$opts->{i}) {
+  print "If you want to print info when an existing song is skipped, use -i.\n";
 }
 my $lwp = LWP::UserAgent->new;
 $lwp->show_progress(1);
@@ -78,7 +81,7 @@ if ($opts->{v}) {
 sub download {
   my ($url, $dir, $filename) = @_;
   if (-e $dir.$filename) {
-    print "Skipping $filename (already downloaded)...\n";
+    print "Skipping $filename (already downloaded)...\n" if $opts->{i};
     return;
   }
 

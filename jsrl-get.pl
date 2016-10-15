@@ -26,9 +26,10 @@ $lwp->show_progress(1);
 # Songs configuration
 my $songs_dir = "songs/";
 my $jsrl_url = "https://jetsetradio.live/audioplayer/audio/";
+my @stations = ("", "poisonjam/", "noisetanks/", "loveshockers/", "rapid99/", "immortals/", "goldenrhinos/");
 
 if ($opts->{s}) {
-  for my $station ("", "poisonjam/", "noisetanks/", "loveshockers/") {
+  for my $station (@stations) {
     my $list = $lwp->get($jsrl_url.$station."~list.js");
     die "Error getting the list for '$jsrl_url$station~list.js'" if $list->is_error;
 

@@ -12,7 +12,7 @@ use XML::Parser;
 
 # Initialization and option parsing
 my $opts = {};
-getopts('sv', $opts);
+getopts('svi', $opts);
 if (!$opts->{s} && !$opts->{v}) {
   print "Downloading both songs and videos. You can choose by passing -s or -v respectively as flags.\n";
   $opts->{s} = $opts->{v} = 1;
@@ -26,7 +26,7 @@ $lwp->show_progress(1);
 # Songs configuration
 my $songs_dir = "songs/";
 my $jsrl_url = "https://jetsetradio.live/audioplayer/audio/";
-my @stations = ("", "poisonjam/", "noisetanks/", "loveshockers/", "rapid99/", "immortals/", "doomriders/", "goldenrhinos/");
+my @stations = ("", "poisonjam/", "noisetanks/", "loveshockers/", "rapid99/", "immortals/", "doomriders/", "goldenrhinos/", "christmas/", "bumps/");
 
 if ($opts->{s}) {
   for my $station (@stations) {

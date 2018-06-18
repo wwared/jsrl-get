@@ -12,7 +12,7 @@ use XML::Parser;
 
 # Initialization and option parsing
 my $opts = {};
-getopts('sv', $opts);
+getopts('svi', $opts);
 if (!$opts->{s} && !$opts->{v}) {
   print "Downloading both songs and videos. You can choose by passing -s or -v respectively as flags.\n";
   $opts->{s} = $opts->{v} = 1;

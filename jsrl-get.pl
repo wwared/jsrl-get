@@ -25,20 +25,19 @@ $lwp->show_progress(1);
 
 # Songs configuration
 my $songs_dir = "songs/";
-my $jsrl_url = "https://jetsetradio.live/audioplayer/audio/";
-my @stations = ("", "poisonjam/", "noisetanks/", "loveshockers/", "rapid99/", "immortals/", "doomriders/", "goldenrhinos/");
+my $jsrl_url = "https://jetsetradio.live/audioplayer/stations/";
+my @stations = ("classic", "future", "ggs", "poisonjam", "noisetanks", "loveshockers", "rapid99", "immortals", "doomriders", "goldenrhinos", "bumps", "summer", "christmas");
 
 if ($opts->{s}) {
   for my $station (@stations) {
-    my $list = $lwp->get($jsrl_url.$station."~list.js");
+    my $list = $lwp->get($jsrl_url.$station."/~list.js");
     die "Error getting the list for '$jsrl_url$station~list.js'" if $list->is_error;
 
     for my $line (split /^/, $list->content) {
       if ($line =~ /"([^"]*)"/) {
         my $filename = $1.".mp3";
-        my $url = $jsrl_url.$station.$filename;
-        my $stn = $station eq "" ? "jsrl/" : $station;
-        my $path = $songs_dir.$stn;
+        my $url = $jsrl_url.$station."/".$filename;
+        my $path = $songs_dir.$station."/";
 
         download($url, $path, $filename);
       }

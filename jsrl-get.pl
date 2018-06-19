@@ -47,7 +47,7 @@ if ($opts->{s}) {
 
 # Videos configuration
 my $videos_dir = "videos/";
-my $jsrl_tv_url = "https://jetsetradio.live/tv/APP/videoplayer/videos/";
+my $jsrl_tv_url = "https://jetsetradio.live/tv/APP/videoplayer/";
 my $jsrl_tv_list_url = "https://jetsetradio.live/tv/APP/preloader/retrieveTotalFilesAndFilesList.php";
 
 if ($opts->{v}) {
@@ -56,9 +56,30 @@ if ($opts->{v}) {
 
   my $xml = XML::Parser->new(Style => 'Tree');
   my $response = $xml->parse($list->content);
+  my %tv;
 
-  my $size = $response->[1][4][2]; # <totalFiles>
-  my $tv_videos_str = $response->[1][8][2]; # <fileListArray>
+  while (my ($index, $xml_item) = each @{$response->[1]}) {
+    next unless $xml_item =~ /^fileListArray(\d+)$/;
+    my $channel_id = $1;
+    my $arr = $response->[1][$index+1];
+    die "Could not parse XML video list!" unless ref $arr eq 'ARRAY' and scalar @{$arr} >= 3 and $arr->[2] =~ '\[';
+
+    $tv{$channel_id} = [] unless defined($tv{$channel_id});
+    push(@{$tv{$channel_id}}, parse_file_array($arr->[2]));
+  }
+
+  while (my ($channel_id, $videoarr) = each %tv) {
+    foreach my $videofn (@$videoarr) {
+      my $filename = $videofn.".mp4";
+      my $url = $jsrl_tv_url."ch".$channel_id."/".$filename;
+
+      download($url, $videos_dir."ch$channel_id/", $filename);
+    }
+  }
+}
+
+sub parse_file_array {
+  my $tv_videos_str = shift; # contents of the <fileListArrayX> tags in the XML response
   $tv_videos_str =~ s/^\[|\]$//g;
 
   my @tv_videos = split(/,/, $tv_videos_str);
@@ -67,14 +88,7 @@ if ($opts->{v}) {
   # Parse \uXXXX escape sequences
   @tv_videos = map { $_ =~ s/\\u(\d{4})/chr(hex($1))/ge; $_ } @tv_videos;
 
-  die "Mismatch between fileListArray size and totalFiles!" if scalar @tv_videos != $size;
-
-  for my $videofn (@tv_videos) {
-    my $filename = $videofn.".mp4";
-    my $url = $jsrl_tv_url.$filename;
-
-    download($url, $videos_dir, $filename);
-  }
+  return @tv_videos;
 }
 
 # Downloads a file, skipping it if it already exists

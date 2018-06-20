@@ -80,11 +80,11 @@ if ($opts->{v}) {
 
 sub parse_file_array {
   my $tv_videos_str = shift; # contents of the <fileListArrayX> tags in the XML response
-  $tv_videos_str =~ s/^\[|\]$//g;
+  my @tv_videos;
 
-  my @tv_videos = split(/,/, $tv_videos_str);
-  @tv_videos = map { $_ =~ s/^"|"$//g; $_ } @tv_videos;
-
+  while ($tv_videos_str =~ s/"(.*?)"//) {
+    push(@tv_videos, $1);
+  }
   # Parse \uXXXX escape sequences
   @tv_videos = map { $_ =~ s/\\u(\d{4})/chr(hex($1))/ge; $_ } @tv_videos;
 

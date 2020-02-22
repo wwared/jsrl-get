@@ -25,8 +25,8 @@ $lwp->show_progress(1);
 
 # Songs configuration
 my $songs_dir = "songs/";
-my $jsrl_url = "https://jetsetradio.live/audioplayer/stations/";
-my @stations = ("classic", "future", "ggs", "poisonjam", "noisetanks", "loveshockers", "rapid99", "immortals", "doomriders", "goldenrhinos", "bumps", "summer", "christmas");
+my $jsrl_url = "https://jetsetradio.live/radio/stations/";
+my @stations = ("classic", "future", "ggs", "poisonjam", "noisetanks", "loveshockers", "rapid99", "immortals", "doomriders", "goldenrhinos", "bumps", "summer", "christmas", "halloween", "ultraremixes", "kingforanotherday", "memoriesoftokyoto", "ollieking", "toejamandearl", "crazytaxi", "hover", "butterflies", "revolution", "endofdays");
 
 if ($opts->{s}) {
   for my $station (@stations) {

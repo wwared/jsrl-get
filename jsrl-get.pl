@@ -31,7 +31,7 @@ my @stations = ("classic", "future", "ggs", "poisonjam", "noisetanks", "loveshoc
 if ($opts->{s}) {
   for my $station (@stations) {
     my $list = $lwp->get($jsrl_url.$station."/~list.js");
-    die "Error getting the list for '$jsrl_url$station~list.js'" if $list->is_error;
+    die "Error getting the list for '$jsrl_url$station/~list.js'" if $list->is_error;
 
     for my $line (split /^/, $list->content) {
       if ($line =~ /"([^"]*)"/) {
@@ -100,8 +100,8 @@ sub download {
   }
 
   my $req = $lwp->get($url);
-  die "Error getting '$url'" if $req->is_error and $req->code != 404;
-  return if $req->code == 404;
+  die "Error getting '$url'" if $req->is_error and (($req->code != 404) and ($req->code != 403));
+  return if (($req->code == 404) or ($req->code == 403));
 
   make_path($dir);
   my $fh = IO::File->new($dir.$filename, "w");

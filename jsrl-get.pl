@@ -26,7 +26,17 @@ $lwp->show_progress(1);
 # Songs configuration
 my $songs_dir = "songs/";
 my $jsrl_url = "https://jetsetradio.live/radio/stations/";
-my @stations = ("classic", "future", "ggs", "poisonjam", "noisetanks", "loveshockers", "rapid99", "immortals", "doomriders", "goldenrhinos", "bumps", "summer", "christmas", "halloween", "ultraremixes", "kingforanotherday", "memoriesoftokyoto", "ollieking", "toejamandearl", "crazytaxi", "hover", "butterflies", "revolution", "endofdays", "lofi", "elaquent");
+
+# Fetch station titles
+my @stations = ();
+my $jsrl_url_homepage = "https://jetsetradio.live/";
+my $homepage = $lwp->get($jsrl_url_homepage);
+die "Error getting the homepage for '$jsrl_url_homepage'" if $homepage->is_error;
+for my $line_homepage (split /^/, $homepage->content) {
+  if ($line_homepage =~ /<script src="radio\/stations\/([^"]*)\/~list.js"><\/script>/) {
+    push @stations, $1;
+  }
+}
 
 if ($opts->{s}) {
   for my $station (@stations) {

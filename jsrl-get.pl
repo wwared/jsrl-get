@@ -44,7 +44,7 @@ if ($opts->{s}) {
     die "Error getting the list for '$jsrl_url$station/~list.js'" if $list->is_error;
 
     for my $line (split /^/, $list->content) {
-      if ($line =~ /"([^"]*)"/) {
+      if ($line =~ /] = "([^"]*)"/) {
         my $filename = $1.".mp3";
         my $url = $jsrl_url.$station."/".$filename;
         my $path = $songs_dir.$station."/";

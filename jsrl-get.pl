@@ -46,7 +46,7 @@ if ($opts->{s}) {
     for my $line (split /^/, $list->content) {
       if ($line =~ /] = "([^"]*)"/) {
         my $filename = $1.".mp3";
-        my $url = $jsrl_url.$station."/".$filename;
+        my $url = $jsrl_url.$station."/".URI::Escape::uri_escape_utf8($filename);
         my $path = $songs_dir.$station."/";
 
         download($url, $path, $filename);
@@ -81,7 +81,7 @@ if ($opts->{v}) {
   while (my ($channel_id, $videoarr) = each %tv) {
     foreach my $videofn (@$videoarr) {
       my $filename = $videofn.".mp4";
-      my $url = $jsrl_tv_url."ch".$channel_id."/".$filename;
+      my $url = $jsrl_tv_url."ch".$channel_id."/".URI::Escape::uri_escape_utf8($filename);
 
       download($url, $videos_dir."ch$channel_id/", $filename);
     }
